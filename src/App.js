@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import Recipe from "./Recipe";
 
 const App = () => {
     const APP_ID = "bb1d8da3";
@@ -16,7 +17,7 @@ const App = () => {
         const response = await fetch(`https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`);
         const data = await response.json();
         setRecipes(data.hits);
-        console.log(data.hits)
+        console.log(data)
     }
     const updateSearch = e => {
         setSearch(e.target.value);
@@ -36,6 +37,19 @@ const App = () => {
                 />
                 <button type="submit" > Search </button>
             </form>
+
+            {
+                recipes.map(recipe => (
+                    <Recipe
+                        key={recipe.recipe.label}
+                        title={recipe.recipe.label}
+                        calories={recipe.recipe.calories}
+                        image={recipe.recipe.image}
+                        ingredients={recipe.recipe.ingredients}
+                    />
+                ))
+            }
+
         </div>
      );
 }
