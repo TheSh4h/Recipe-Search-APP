@@ -14,11 +14,22 @@ const App = () => {
     }, [query])
 
     const getRecipes = async () => {
-        const response = await fetch(`https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`);
-        const data = await response.json();
-        setRecipes(data.hits);
-        console.log(data)
-    }
+        const url = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
+        
+        try {
+        const response = await fetch(url);
+        if(!response.ok){
+            throw new Error('Network response was not ok')
+        }
+
+        const { hits } = await response.json();
+        setRecipes(hits);
+        //console.log(hits);
+        } catch (error) {
+            console.log('Error:', error.message);
+        }
+    };
+
     const updateSearch = e => {
         setSearch(e.target.value);
     }
