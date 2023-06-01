@@ -1,34 +1,14 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import useFetch from "./useFetch";
 import Recipe from "./Recipe";
+import { useState } from "react";
 
 const App = () => {
     const APP_ID = "bb1d8da3";
     const APP_KEY = "7bb5aa3b8c7e357dbad4baa93ba0c027";
-    const [recipes, setRecipes] = useState([]);
     const [search, setSearch] = useState("");
     const [query, setQuery] = useState("");
 
-    useEffect(() => {
-        getRecipes();
-    }, [query])
-
-    const getRecipes = async () => {
-        const url = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
-        
-        try {
-        const response = await fetch(url);
-        if(!response.ok){
-            throw new Error('Network response was not ok')
-        }
-
-        const { hits } = await response.json();
-        setRecipes(hits);
-        //console.log(hits);
-        } catch (error) {
-            console.log('Error:', error.message);
-        }
-    };
+    const { recipes, error, loading } = useFetch(query, APP_ID, APP_KEY);
 
     const updateSearch = e => {
         setSearch(e.target.value);
@@ -57,7 +37,10 @@ const App = () => {
                 type="submit" > Search </button>
             </form>
 
-            {
+            {loading && <div>Loading...</div>}
+            {error && <div>Error: {error.message}</div>}
+
+            {Array.isArray(recipes) && recipes.length > 0 ? (
                 recipes.map(recipe => (
                     <Recipe
                         key={recipe.recipe.label}
@@ -67,6 +50,9 @@ const App = () => {
                         ingredients={recipe.recipe.ingredients}
                     />
                 ))
+            ) : recipes.length === 0 && !loading ?  (
+                <div>No recipes found</div>
+            ) : null
             }
 
         </div>
