@@ -6,7 +6,7 @@ const App = () => {
     const APP_ID = "bb1d8da3";
     const APP_KEY = "7bb5aa3b8c7e357dbad4baa93ba0c027";
     const [search, setSearch] = useState("");
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState();
 
     const { recipes, error, loading } = useFetch(query, APP_ID, APP_KEY);
 
@@ -37,8 +37,8 @@ const App = () => {
                 type="submit" > Search </button>
             </form>
 
-            {loading && <div>Loading...</div>}
-            {error && <div>Error: {error.message}</div>}
+            {loading && <div className="text-gray-200 text-lg">Loading...</div>}
+            {error && <div className="text-gray-200 text-lg">Error: {error.message}</div>}
 
             {Array.isArray(recipes) && recipes.length > 0 ? (
                 recipes.map(recipe => (
@@ -51,7 +51,7 @@ const App = () => {
                     />
                 ))
             ) : recipes.length === 0 && !loading ?  (
-                <div>No recipes found</div>
+                <div className="text-gray-200 text-lg">No recipes found</div>
             ) : null
             }
 
